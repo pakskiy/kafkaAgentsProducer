@@ -1,0 +1,49 @@
+version: '3'
+name: test-kafka-agents-app
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka_1:
+    image: wurstmeister/kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://localhost:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+      KAFKA_CREATE_TOPICS: 'message-topic:3:1'
+      KAFKA_BROKER_RACK: '1'
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8081:8080
+    depends_on:
+      - kafka_1
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka_1:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+  agentdb:
+    image: postgres:12.16
+    command: [ "postgres","-c","log_statement=all" ]
+    #    restart: always
+    environment:
+      POSTGRES_DB: agentdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - '55432:5432'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
