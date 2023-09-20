@@ -1,1 +1,39 @@
-
+server:
+  port: 8070
+spring:
+  kafka:
+    bootstrap-servers: 127.0.0.1:9094
+    producer:
+      topic:
+        name: message-topic
+  datasource:
+    url: jdbc:postgresql://localhost:55432/agentdb
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update #create-drop
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    properties:
+      hibernate:
+        proc:
+          param_null_passing: true
+        generate_statistics: false
+        jdbc:
+          batch_size: 1000
+  liquibase:
+    change-log: classpath:db/scripts.xml
+    enabled: true
+logging:
+  level:
+    liquibase: ERROR
+    root: INFO
+app:
+  settings:
+    download-timeout: 60
+    telemetry-count: 2
+    agents-count: 10
