@@ -78,7 +78,7 @@ public class AgentServiceImpl implements AgentService {
                         log.error("ERR_AGENT_SRV_GET_MSG_LIST_ITERATE", e);
                     }
                     agentDtoList.removeAll(elementList);
-                    if (agentDtoList.size() == 0) {
+                    if (agentDtoList.isEmpty()) {
                         isEmpty = true;
                     }
                 }
