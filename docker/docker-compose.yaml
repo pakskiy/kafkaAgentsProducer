@@ -31,18 +31,34 @@ services:
       DYNAMIC_CONFIG_ENABLED: 'true'
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka_1:9092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
-  agentdb:
+  agentdb1:
     image: postgres:12.16
     command: [ "postgres","-c","log_statement=all" ]
     #    restart: always
     environment:
-      POSTGRES_DB: agentdb
+      POSTGRES_DB: agent_producer
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
     ports:
       - '55432:5432'
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./postgres-data/1:/var/lib/postgresql/data
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+  agentdb2:
+    image: postgres:12.16
+    command: [ "postgres","-c","log_statement=all" ]
+    #    restart: always
+    environment:
+      POSTGRES_DB: agent_consumer
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - '56432:5432'
+    volumes:
+      - ./postgres-data/2:/var/lib/postgresql/data
     logging:
       options:
         max-size: 10m

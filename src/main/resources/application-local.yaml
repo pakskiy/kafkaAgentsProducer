@@ -7,7 +7,7 @@ spring:
       topic:
         name: message-topic
   datasource:
-    url: jdbc:postgresql://localhost:55432/agentdb
+    url: jdbc:postgresql://localhost:55432/agent_producer
     username: postgres
     password: 123456
     driver-class-name: org.postgresql.Driver
