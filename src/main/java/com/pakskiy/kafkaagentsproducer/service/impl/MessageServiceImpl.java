@@ -1,6 +1,5 @@
 package com.pakskiy.kafkaagentsproducer.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pakskiy.kafkaagentsproducer.connection.KafkaProducer;
 import com.pakskiy.kafkaagentsproducer.exception.ProducerException;
 import com.pakskiy.kafkaagentsproducer.model.MessageEntity;
@@ -20,7 +19,6 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
-    private final ObjectMapper objectMapper;
     private final KafkaProducer producer;
     @Value("${spring.kafka.producer.topic.name}")
     private String outboundTopic;
