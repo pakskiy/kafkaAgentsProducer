@@ -5,8 +5,6 @@ import com.pakskiy.kafkaagentsproducer.repository.MessageRepository;
 import com.pakskiy.kafkaagentsproducer.service.impl.AgentServiceImpl;
 import com.pakskiy.kafkaagentsproducer.service.impl.MessageServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = KafkaAgentsProducerApplication.class)
+@SpringBootTest
 @ActiveProfiles("test")
 @Testcontainers
 @RequiredArgsConstructor
@@ -37,23 +32,6 @@ class KafkaAgentsProducerApplicationTests {
     MessageServiceImpl messageService;
     @Autowired
     MessageRepository messageRepository;
-
-    private static final DockerImageName dockerImageName = DockerImageName.parse("postgres:12.15");
-    @Container
-    static PostgreSQLContainer<?> postgresqlContainer = (PostgreSQLContainer) new PostgreSQLContainer(dockerImageName)
-            .withDatabaseName("stocksTestDb")
-            .withUsername("postgres")
-            .withPassword("123456").withReuse(true);
-
-    @BeforeAll
-    static void beforeAll() {
-        postgresqlContainer.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgresqlContainer.stop();
-    }
 
     @Test
     void test_agent_list() {
